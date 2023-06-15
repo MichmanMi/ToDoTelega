@@ -2,7 +2,7 @@ from aiogram import Bot, Dispatcher, executor, types
 import logging
 import Marcop
 import Connect_DataBase
-import datetime
+from datetime import datetime
 
 
 logging.basicConfig(level=logging.INFO,
@@ -21,14 +21,10 @@ async def welcome(msg: types.Message):
 @dp.message_handler(content_types=["text"])
 async def main_menu(msg: types.Message):
     if msg.text == "Список задач📋":
-        Today=datetime.datetime.now().date()
-        All_Tasks=Connect_DataBase.all_Tasks()
-        for Task in All_Tasks:
-            time_Task=str(Task[1])
-            time_Task=datetime.datetime.strptime(time_Task,'%d/%m')
-            if Today==time_Task:
-                print(Task)
-        await msg.answer("Список задач пока в разработке🤷🏻‍♀️........")
+        Today = datetime.now().date().strftime('%d/%m/%Y')
+        All_Tasks = Connect_DataBase.all_Tasks()
+        result = [task for task in All_Tasks if Today == task[1]]
+        await msg.answer("Ваш список на сегодня",reply_markup=Marcop.marcop_task_list_today(result))
     elif msg.text == "Добавить задачу📝":
         await msg.answer("Добавить задачу пока в разработке🤷🏻‍♀️........")
     elif msg.text == "Удалить задачу❌":
