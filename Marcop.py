@@ -1,11 +1,14 @@
 from aiogram import types
 
+import Connect_DataBase
+
 
 def Marcop_main():
     key_main=types.ReplyKeyboardMarkup(resize_keyboard=True).add(types.KeyboardButton('Список задач📋'),
                                                                  types.KeyboardButton('Добавить задачу📝'),
-                                                                 types.KeyboardButton('Удалить задачу❌'))
-    return key_main
+                                                                 types.KeyboardButton('Удалить задачу❌',
+                                                                                      ))
+    return key_main   #1)Добавить кнопку "Время"
 
 def AddTask():
     Button_task=types.ReplyKeyboardMarkup(resize_keyboard=True).add(types.KeyboardButton('Добавить на сегодня'),
@@ -25,5 +28,15 @@ def marcop_task_list_today(task_list):
     marcop = types.InlineKeyboardMarkup(row_width=1)
     sorted_list = sorted(task_list,key=lambda x: x[2])
     for task in sorted_list:
-        marcop.add(types.InlineKeyboardButton(f'{task[2]}', callback_data=f'{task[2]}'))
+        marcop.add(types.InlineKeyboardButton(f'{task[2]}', callback_data=f'{task[2]}:{task[0]}'))
     return marcop
+
+marcop_task_list_today(Connect_DataBase.all_Tasks())
+
+def confirmation():
+    confirmation = types.InlineKeyboardMarkup()
+    confirmation.add(types.InlineKeyboardButton("Да",callback_data="Yes"),
+                     types.InlineKeyboardButton("Нет",callback_data="No"))
+    return confirmation
+
+#3)добавить инлайт кнопки, которые вызываются во 2-м пункте (5 шт)
