@@ -38,7 +38,11 @@ async def main_menu(msg: types.Message, state: FSMContext):
         await state.set_state(Sates.Forma.title)
     elif msg.text == "Удалить задачу❌":
         await msg.answer("Удалить задачу пока в разработке🤷🏻‍♀️........")
-    #2)отработчик кнопки "Время", которая выводит сообщение и инлайт кнопками
+    elif msg.text == "Время🕓":
+        await msg.answer("Время:",
+                         reply_markup=Marcop.timeInlineButton())
+
+#2)отработчик кнопки "Время", которая выводит сообщение и инлайт кнопками✔️
     else:
         await msg.answer(f"Вы отправили: <span class='tg-spoiler'><ins><i>{msg.text}</i></ins></span>", parse_mode='HTML')
 

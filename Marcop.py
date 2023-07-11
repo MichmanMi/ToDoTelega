@@ -6,9 +6,9 @@ import Connect_DataBase
 def Marcop_main():
     key_main=types.ReplyKeyboardMarkup(resize_keyboard=True).add(types.KeyboardButton('Список задач📋'),
                                                                  types.KeyboardButton('Добавить задачу📝'),
-                                                                 types.KeyboardButton('Удалить задачу❌',
-                                                                                      ))
-    return key_main   #1)Добавить кнопку "Время"
+                                                                 types.KeyboardButton('Удалить задачу❌')).add(types.KeyboardButton('Время🕓'))
+
+    return key_main   #1)Добавить кнопку "Время"✔️
 
 def AddTask():
     Button_task=types.ReplyKeyboardMarkup(resize_keyboard=True).add(types.KeyboardButton('Добавить на сегодня'),
@@ -35,8 +35,18 @@ marcop_task_list_today(Connect_DataBase.all_Tasks())
 
 def confirmation():
     confirmation = types.InlineKeyboardMarkup()
-    confirmation.add(types.InlineKeyboardButton("Да",callback_data="Yes"),
-                     types.InlineKeyboardButton("Нет",callback_data="No"))
+    confirmation.add(types.InlineKeyboardButton("Да", callback_data="Yes"),
+                     types.InlineKeyboardButton("Нет", callback_data="No"))
     return confirmation
 
-#3)добавить инлайт кнопки, которые вызываются во 2-м пункте (5 шт)
+def timeInlineButton():
+    timeInlineButton = types.InlineKeyboardMarkup()
+    timeInlineButton.add(types.InlineKeyboardButton("Кнопка 1", callback_data="bnt1"),
+                         types.InlineKeyboardButton("Кнопка 2", callback_data="bnt2"),
+                         types.InlineKeyboardButton("Кнопка 3", callback_data="bnt3"),
+                         types.InlineKeyboardButton("Кнопка 4", callback_data="bnt4"),
+                         types.InlineKeyboardButton("Кнопка 5", callback_data="bnt5")
+                         )
+    return timeInlineButton
+
+#3)добавить инлайт кнопки, которые вызываются во 2-м пункте (5 шт)✔️
