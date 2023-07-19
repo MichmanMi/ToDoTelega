@@ -12,7 +12,7 @@ def Marcop_main():
 
     key_main.insert(types.KeyboardButton('Время🕓'))
 
-    return key_main  # 1)Добавить кнопку "Время"✔️
+    return key_main
 
 
 def AddTask():
@@ -55,17 +55,22 @@ def timeInlineButton(hour: int, min: int):
 
 
     if hour == 0:
-        hour = 24
-    if min == -1:
+        hour = 23
+    elif hour == 24:
+        hour = 00
+    if min == -10:
         min = 60
+    elif min == 70:
+        min = 00
+
     timeInlineButton.row(types.InlineKeyboardButton("➕ 1️⃣ Час", callback_data=f"time:{hour + 1}:{min}"),
                          types.InlineKeyboardButton("➖ ️ 1️⃣ Час", callback_data=f"time:{hour - 1}:{min}"))
 
     timeInlineButton.row(types.InlineKeyboardButton(f"{hour}:{min}", callback_data='0'))
 
-    timeInlineButton.row(types.InlineKeyboardButton("➕ 1️⃣ минута", callback_data=f"time:{hour}:{min + 1}"),
-                         types.InlineKeyboardButton("➖ ️ 1️⃣ минута", callback_data=f"time:{hour}:{min - 1}"))
+    timeInlineButton.row(types.InlineKeyboardButton("➕ 1️⃣0️⃣ минут", callback_data=f"time:{hour}:{min + 10}"),
+                         types.InlineKeyboardButton("➖ ️ 1️⃣0️⃣ минут", callback_data=f"time:{hour}:{min - 10}"))
     timeInlineButton = Button_Back_Inline(timeInlineButton)
     return timeInlineButton
 
-# 3)добавить инлайт кнопки, которые вызываются во 2-м пункте (5 шт)✔️
+

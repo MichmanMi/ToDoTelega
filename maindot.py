@@ -42,7 +42,7 @@ async def main_menu(msg: types.Message, state: FSMContext):
         await msg.answer("Время:",
                          reply_markup=Marcop.timeInlineButton(hour=00, min=00))
 
-    # 2)отработчик кнопки "Время", которая выводит сообщение и инлайт кнопками✔️
+
     else:
         await msg.answer(f"Вы отправили: <span class='tg-spoiler'><ins><i>{msg.text}</i></ins></span>",
                          parse_mode='HTML')
