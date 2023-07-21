@@ -1,17 +1,17 @@
 from aiogram import Bot, Dispatcher, executor, types
 from aiogram.contrib.fsm_storage.memory import MemoryStorage
 from aiogram.dispatcher import FSMContext
+from Log_Config import *
 
-import logging
+
 import Marcop
 import Connect_DataBase
 from datetime import datetime
 import Sates
 
-logging.basicConfig(level=logging.INFO,
-                    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
-                    handlers=[logging.FileHandler("Error.log"),
-                              logging.StreamHandler()])
+
+
+
 bot = Bot(token=open("Canfic.txt", mode="r").read())
 dp = Dispatcher(bot, storage=MemoryStorage())
 
@@ -99,8 +99,15 @@ async def task_title(msg: types.Message, state: FSMContext):
 @dp.callback_query_handler(state=Sates.Forma.time)
 async def callback_add_task(call: types.callback_query, state: FSMContext):
     if call.data == "Yes":
-        await call.message.edit_text("Отлично! Записал!", reply_markup=None)
-        await state.finish()
+        data = await state.get_data()
+        result=Connect_DataBase.all_Tasks_Write_Down(data['title'], data['date'], data['time'])
+        if result == True:
+            await call.message.edit_text("Отлично! Записал!", reply_markup=None)
+            await state.finish()
+        else:
+            await call.message.edit_text("Ошибка! Не записал!", reply_markup=None)
+            await state.finish()
+
     elif call.data == "No":
         await call.message.delete()
         await state.finish()
@@ -110,6 +117,30 @@ async def callback_add_task(call: types.callback_query, state: FSMContext):
 async def callback_time(call: types.callback_query):
     msg, hour, min = call.data.split(':')
     await call.message.edit_text('Время:', reply_markup=Marcop.timeInlineButton(int(hour), int(min)))
+
+@dp.callback_query_handler(lambda c: c.data and c.data.startswith('task'))
+async def callback_task(call: types.callback_query):
+    if call.data.split(',')[-1] == 'back':
+        All_Tasks = Connect_DataBase.all_Tasks()
+        if All_Tasks:
+            Today = datetime.now().date().strftime('%d/%m/%Y')
+            result = [task for task in All_Tasks if Today == task[1]]
+            await call.message.edit_text("Ваш список на сегодня", reply_markup=Marcop.marcop_task_list_today(result))
+        else:
+            await call.message.edit_text("Задач нет")
+    else:
+        result=Connect_DataBase.Get_Task(call.data.split(',')[-1])
+
+        Task = result[0][0]
+        Time = result[0][1]
+        Data = result[0][2]
+        await call.message.edit_text(f"Вот Ваша задача: \n"
+                                     f"<b> название задачи </b>: {Task}\n"
+                                     f"<b> дата </b>: {Data}\n"
+                                     f"<b> время </b>: {Time}", parse_mode='HTML',
+                                     reply_markup=Marcop.Button_Back_Inline_Task())
+
+
 
 
 @dp.callback_query_handler(text=['Назад'])

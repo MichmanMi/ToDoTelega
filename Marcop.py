@@ -36,7 +36,7 @@ def marcop_task_list_today(task_list):
     marcop = types.InlineKeyboardMarkup(row_width=1)
     sorted_list = sorted(task_list, key=lambda x: x[2])
     for task in sorted_list:
-        marcop.add(types.InlineKeyboardButton(f'{task[2]}', callback_data=f'{task[2]}:{task[0]}'))
+        marcop.add(types.InlineKeyboardButton(f'{task[2]}', callback_data=f'task,{task[2]},{task[0]}'))
     return marcop
 
 
@@ -73,4 +73,7 @@ def timeInlineButton(hour: int, min: int):
     timeInlineButton = Button_Back_Inline(timeInlineButton)
     return timeInlineButton
 
-
+def Button_Back_Inline_Task():
+    Back = types.InlineKeyboardMarkup()
+    Back.row(types.InlineKeyboardButton('Назад', callback_data="task,back"))
+    return Back
