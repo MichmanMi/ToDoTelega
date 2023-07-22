@@ -1,8 +1,8 @@
+from itertools import zip_longest
+
 from aiogram import types
 
 import Connect_DataBase
-
-
 
 
 def Marcop_main():
@@ -16,6 +16,10 @@ def Marcop_main():
 
     return key_main
 
+def back_menu():
+    back_menu = types.InlineKeyboardMarkup()
+    back_menu.insert(types.InlineKeyboardButton("Назад", callback_data='Назад в меню'))
+    return back_menu
 
 def AddTask():
     Button_task = types.ReplyKeyboardMarkup(resize_keyboard=True).add(types.KeyboardButton('Добавить на сегодня📅'),
@@ -34,15 +38,27 @@ def Button_Back_Inline(Back: types.InlineKeyboardMarkup):
     return Back
 
 
-def marcop_task_list_today(task_list):
+def split_list(lst, size):
+    return [list(filter(None, sublist)) for sublist in zip_longest(*([iter(lst)] * size))]
+
+
+def marcop_task_list_today(task_list, page):
     marcop = types.InlineKeyboardMarkup(row_width=1)
-    sorted_list = sorted(task_list, key=lambda x: x[2])
-    for task in sorted_list:
-        marcop.add(types.InlineKeyboardButton(f'{task[2]}', callback_data=f'task,{task[2]},{task[0]}'))
+    sorted_list = sorted(task_list, key=lambda x: x[1])
+    result_list_of_dicts = split_list(sorted_list, 5)
+    for task in result_list_of_dicts[page]:
+        marcop.add(types.InlineKeyboardButton(f'{task[1]}', callback_data=f'task,select,{task[2]},{task[0]},{page}'))
+    if page == 0:
+        if len(result_list_of_dicts) != 1:
+            marcop.row(types.InlineKeyboardButton('>', callback_data=f'task,{page},+,{result_list_of_dicts[page][0][-1]}'))
+    if  0 < page < len(result_list_of_dicts)-1:
+        marcop.row(types.InlineKeyboardButton('<', callback_data=f'task,{page},-,{result_list_of_dicts[page][0][-1]}'),
+                   types.InlineKeyboardButton('>', callback_data=f'task,{page},+,{result_list_of_dicts[page][0][-1]}'))
+    if page >= len(result_list_of_dicts)-1:
+        if len(result_list_of_dicts) != 1:
+            marcop.row(types.InlineKeyboardButton('<', callback_data=f'task,{page},-,{result_list_of_dicts[page][0][-1]}'))
+    marcop = Button_Back_Inline_Task(marcop)
     return marcop
-
-
-marcop_task_list_today(Connect_DataBase.all_Tasks())
 
 
 def confirmation():
@@ -75,7 +91,11 @@ def timeInlineButton(hour: int, min: int):
     return timeInlineButton
 
 
-def Button_Back_Inline_Task():
-    Back = types.InlineKeyboardMarkup()
+def Button_Back_Inline_Task(Back):
     Back.row(types.InlineKeyboardButton('Назад🔙', callback_data="task,back"))
+    return Back
+
+
+def Button_Back_Inline_Time(Back, page, date):
+    Back.row(types.InlineKeyboardButton('Назад🔙', callback_data=f"task,{page},{date},back-page"))
     return Back
