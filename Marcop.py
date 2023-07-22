@@ -3,32 +3,34 @@ from aiogram import types
 import Connect_DataBase
 
 
+
+
 def Marcop_main():
-    key_main = types.ReplyKeyboardMarkup(resize_keyboard=True)
+    key_main = types.InlineKeyboardMarkup()
 
-    key_main.add(types.KeyboardButton('Список задач📋'),
-                 types.KeyboardButton('Добавить задачу📝'),
-                 types.KeyboardButton('Удалить задачу❌'))
+    key_main.add(types.InlineKeyboardButton("Список задач📋", callback_data="Список задач📋"),
+                 types.InlineKeyboardButton("Добавить задачу📝", callback_data="Добавить задачу📝"),
+                 types.InlineKeyboardButton("Удалить задачу❌", callback_data="Удалить задачу❌"))
 
-    key_main.insert(types.KeyboardButton('Время🕓'))
+    key_main.insert(types.InlineKeyboardButton('Время🕓', callback_data='Время🕓'))
 
     return key_main
 
 
 def AddTask():
-    Button_task = types.ReplyKeyboardMarkup(resize_keyboard=True).add(types.KeyboardButton('Добавить на сегодня'),
-                                                                      types.KeyboardButton('Добавить на другую дату'))
+    Button_task = types.ReplyKeyboardMarkup(resize_keyboard=True).add(types.KeyboardButton('Добавить на сегодня📅'),
+                                                                      types.KeyboardButton('Добавить на другую дату🗓'))
     Button_task = Button_Back_Reply(Button_task)
     return Button_task
 
 
 def Button_Back_Reply(Back: types.ReplyKeyboardMarkup):
-    Back.insert(types.KeyboardButton('Назад'))
+    Back.insert(types.KeyboardButton('Назад🔙'))
     return Back
 
 
 def Button_Back_Inline(Back: types.InlineKeyboardMarkup):
-    Back.row(types.InlineKeyboardButton('Назад', callback_data='Назад'))
+    Back.row(types.InlineKeyboardButton('Назад🔙', callback_data='Назад'))
     return Back
 
 
@@ -45,14 +47,13 @@ marcop_task_list_today(Connect_DataBase.all_Tasks())
 
 def confirmation():
     confirmation = types.InlineKeyboardMarkup()
-    confirmation.add(types.InlineKeyboardButton("Да", callback_data="Yes"),
-                     types.InlineKeyboardButton("Нет", callback_data="No"))
+    confirmation.add(types.InlineKeyboardButton("Да👍", callback_data="Yes"),
+                     types.InlineKeyboardButton("Нет👎", callback_data="No"))
     return confirmation
 
 
 def timeInlineButton(hour: int, min: int):
     timeInlineButton = types.InlineKeyboardMarkup()
-
 
     if hour == 0:
         hour = 23
@@ -73,7 +74,8 @@ def timeInlineButton(hour: int, min: int):
     timeInlineButton = Button_Back_Inline(timeInlineButton)
     return timeInlineButton
 
+
 def Button_Back_Inline_Task():
     Back = types.InlineKeyboardMarkup()
-    Back.row(types.InlineKeyboardButton('Назад', callback_data="task,back"))
+    Back.row(types.InlineKeyboardButton('Назад🔙', callback_data="task,back"))
     return Back
