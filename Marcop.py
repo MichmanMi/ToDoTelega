@@ -9,10 +9,7 @@ def Marcop_main():
     key_main = types.InlineKeyboardMarkup()
 
     key_main.add(types.InlineKeyboardButton("Список задач📋", callback_data="Список задач📋"),
-                 types.InlineKeyboardButton("Добавить задачу📝", callback_data="Добавить задачу📝"),
-                 types.InlineKeyboardButton("Удалить задачу❌", callback_data="Удалить задачу❌"))
-
-    key_main.insert(types.InlineKeyboardButton('Время🕓', callback_data='Время🕓'))
+                 types.InlineKeyboardButton("Добавить задачу📝", callback_data="Добавить задачу📝"))
 
     return key_main
 
@@ -47,7 +44,7 @@ def marcop_task_list_today(task_list, page):
     sorted_list = sorted(task_list, key=lambda x: x[1])
     result_list_of_dicts = split_list(sorted_list, 5)
     for task in result_list_of_dicts[page]:
-        marcop.add(types.InlineKeyboardButton(f'{task[1]}', callback_data=f'task,select,{task[2]},{task[0]},{page}'))
+        marcop.add(types.InlineKeyboardButton(f'{task[1]}', callback_data=f'task,select,{task[2]},{task[0]},{page},{task[1]}'))
     if page == 0:
         if len(result_list_of_dicts) != 1:
             marcop.row(types.InlineKeyboardButton('>', callback_data=f'task,{page},+,{result_list_of_dicts[page][0][-1]}'))
@@ -83,7 +80,7 @@ def timeInlineButton(hour: int, min: int):
     timeInlineButton.row(types.InlineKeyboardButton("➕ 1️⃣ Час", callback_data=f"time:{hour + 1}:{min}"),
                          types.InlineKeyboardButton("➖ ️ 1️⃣ Час", callback_data=f"time:{hour - 1}:{min}"))
 
-    timeInlineButton.row(types.InlineKeyboardButton(f"{hour}:{min}", callback_data='0'))
+    timeInlineButton.row(types.InlineKeyboardButton(f"{hour}:{min}", callback_data=f'time:{hour}:{min}:select'))
 
     timeInlineButton.row(types.InlineKeyboardButton("➕ 1️⃣0️⃣ минут", callback_data=f"time:{hour}:{min + 10}"),
                          types.InlineKeyboardButton("➖ ️ 1️⃣0️⃣ минут", callback_data=f"time:{hour}:{min - 10}"))
@@ -96,6 +93,7 @@ def Button_Back_Inline_Task(Back):
     return Back
 
 
-def Button_Back_Inline_Time(Back, page, date):
-    Back.row(types.InlineKeyboardButton('Назад🔙', callback_data=f"task,{page},{date},back-page"))
+def Button_Back_Inline_Time(Back, page, date, time, task):
+    Back.row(types.InlineKeyboardButton('Удалить задачу', callback_data=f"Delete,{page},{date},{time},{task}"),
+             types.InlineKeyboardButton('Назад🔙', callback_data=f"task,{page},{date},back-page"))
     return Back

@@ -12,10 +12,10 @@ def all_Tasks():
     cursor.execute("SELECT * FROM ToDo")
     result = cursor.fetchall()
 
-
     cursor.close()
     Base.close()
     return result
+
 
 def all_Tasks_Write_Down(Task, Data, Time):
     try:
@@ -36,28 +36,24 @@ def all_Tasks_Write_Down(Task, Data, Time):
         return False
 
 
-
-def Get_Task(task):
+def Delete_Task(task, date, time):
     Base = sqlite3.connect("DataBase.sqllite")
 
     cursor = Base.cursor()
 
-    cursor.execute("SELECT Task, Time, Data FROM ToDo WHERE Task=? " , (task,) )
-    result = cursor.fetchall()
-
+    cursor.execute("DELETE FROM ToDo WHERE Task=? AND Data=? AND Time=?", (task, date, time))
+    Base.commit()
 
     cursor.close()
     Base.close()
-    return result
 
 def Get_Data(data):
     Base = sqlite3.connect("DataBase.sqllite")
 
     cursor = Base.cursor()
 
-    cursor.execute("SELECT Task, Time, Data FROM ToDo WHERE Data=? " , (data,) )
+    cursor.execute("SELECT Task, Time, Data FROM ToDo WHERE Data=? ", (data,))
     result = cursor.fetchall()
-
 
     cursor.close()
     Base.close()
